@@ -1,0 +1,24 @@
+.product_detail_container
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.product_detail_container .product_image_cotainer 
+{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.product_detail_container .product_image_cotainer img
+{
+    width: 60%;
+    height: 60%;
+}
+
+.product_detail_container .product_info_container
+{
+    width: 45%;
+}

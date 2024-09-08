@@ -1,0 +1,35 @@
+.footer_container
+{
+    position: absolute;
+    bottom: var(--footer-bottom);
+    width: 100%; 
+    height: var(--footer-height);
+    background-color: var(--black-color);
+}
+.footer_container .container
+{
+    display: flex;
+    justify-content: space-between;
+    color: var(--white-color);
+    background-color: var(--black-color);
+    padding-top: 30px;
+}
+
+.list_link_container ul
+{
+    list-style: none;
+    padding: 0;
+}
+.list_link_container ul li
+{
+    margin-top: 10px;
+}
+.list_link_container ul li a{
+    color: var(--white-color);
+    text-decoration: none;
+}
+
+.footer_list_link
+{
+    background-color: var(--black-color);
+}

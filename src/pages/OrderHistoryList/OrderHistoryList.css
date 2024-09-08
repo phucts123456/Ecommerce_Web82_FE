@@ -1,0 +1,102 @@
+.order_history_list_container
+{
+    margin-top: var(--header-height);
+}
+.cart_list_container
+{
+    margin-bottom: 100px;
+    margin-top: 70px;
+}
+
+
+.cart_container .container .product_detail_category
+{
+    margin-top: 140px;
+    font-size: 20px;
+}
+
+.cart_item_img
+{
+    width: 30px;
+    margin-right: 5px;
+}
+
+.cart_item_link
+{
+    text-decoration: none;
+    color: var(--black-color);
+}
+
+.coupon_container
+{
+    display: flex;
+    width: 30%;
+    height: 30%;
+    flex-wrap: wrap;
+}
+
+.coupon_container .coupon_msg
+{
+    width: 100%;
+    color: var(--red-title);
+}
+
+.coupon_container .coupon_ddl
+{
+    width: 60%;
+}
+.coupon_and_subtotal_container
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.coupon_container .coupon_use_btn
+{
+    width: 30%;
+    background-color: var(--red-title);
+    color: var(--white-color);
+    margin-left: 10px;
+}
+
+.cart_total
+{
+    display: flex;
+    justify-content: space-between;  
+    margin-bottom: 30px;
+}
+
+.subtotal_container
+{
+    width: 40%;
+    border: 1px solid;
+    padding: 10px;
+}
+
+.subtotal_container .check_out_btn_continer
+{
+    display: flex;
+    justify-content: center;
+}
+.subtotal_container .check_out_btn_continer .check_out_btn
+{
+    padding: 10px;
+    background-color: var(--red-title);
+    color: var(--white-color);  
+}
+.subtotal_container .check_out_btn_continer a
+{
+    text-decoration: none !important;
+    padding: 20px !important;
+    font-size: 18px;
+}
+
+.subtotal_container .subtotal_title {
+    margin-bottom: 30px;
+}
+
+.order_history_row:hover
+{
+    
+    background-color: var(--grey-color);
+}

@@ -1,0 +1,47 @@
+.today_sales_container
+{
+    margin-bottom: var(--space-between-section);
+}
+.today_sales_container .container
+{
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--seperate-bottom-border);
+}
+.today_sales_timer_container
+{
+    display: flex;
+    font-size: 30px;
+    margin-top: 10px;
+    font-weight: 700;
+}
+.today_sales_timer_container .today_sales_timer_title
+{
+    width: 15%;
+    display: flex;
+    align-items: center;
+}
+.today_sales_timer_container .today_sales_timer
+{
+    display: flex;
+    align-items: center;
+    width: 85%;
+}
+
+.today_sales_timer_container .today_sales_timer .today_sales_timer_item
+{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.today_sales_timer_container .today_sales_timer .today_sales_timer_item span:first-child
+{
+    font-size: 15px;
+}
+
+.today_sales_timer_container .today_sales_timer .time_split
+{
+    color: var(--red-title);
+    margin-left: 15px;
+}

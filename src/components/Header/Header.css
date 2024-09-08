@@ -1,0 +1,129 @@
+.header_container
+{
+    border-bottom: 1px solid var(--grey-border);
+    height: 100%;
+    padding-top: 20px;
+    position: fixed;
+    top:0;
+    right: 0;
+    left: 0;
+    height: var(--header-height);
+    z-index: 999999999;
+    background-color: var(--white-color);
+}
+.header_container .container {
+
+    display: flex;
+    height: 100%;
+}
+
+.header_container .container .header_title_container
+{
+    width: 25%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+.header_container .container .header_title_container .header_title
+{
+    font-size: 30px;
+    font-weight: 600;
+    width: 100%;
+    width: 20%;
+} 
+.header_container .container .header_title_container .header_title a
+{
+    text-decoration: none;
+    color: var(--black-color);
+}
+.header_container .container  .nav_bar_container
+{
+    width: 40%;
+} 
+
+
+.header_container .container .nav_bar_container .nav_bar_link_list
+{
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.header_container .container .nav_bar_container .nav_bar_link_list .nav_bar_link_list_item
+{
+    display: block;
+    text-decoration: none;
+    color: var(--black-color);
+    font-size: 17px;
+    width: 20%;
+}
+
+.header_container .container .search_bar_container
+{
+    width: 30%;
+}
+
+.header_container .container .search_bar_container .search_bar_content
+{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.header_container .container  .search_bar_container .search_bar_content .search_bar_content_search_input
+{
+    width: 100%;
+    border: 1px solid var(---grey-color);
+    padding: 7px 10px 7px 10px;
+    background-color: var(--grey-color);
+}
+
+.header_container .container  .search_bar_container .search_bar_content .search_bar_content_icon
+{
+    position: absolute;
+    right: 10px;
+}
+
+
+.header_container .container .user_action_container
+{
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.header_container .container .user_action_container .icon_link
+{
+    font-size: 30px;
+    color: var(--black-color);
+}
+
+
+.header_container .container .user_action_container .user_action_item
+{
+    width: 50%;
+}
+
+
+@media screen and (max-width: 800px) {
+    .header_container .container .header_title_container
+    {
+        width: 40%;
+    }
+    .header_container .container .nav_bar_container {
+        display: none;
+
+    }
+    .header_container .container .search_bar_container {
+        width: 40%;
+    }
+    .header_container .container .user_action_container
+    {
+        width: 20%;
+    }
+}

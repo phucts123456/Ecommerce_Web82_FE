@@ -1,0 +1,10 @@
+.AdvImage_container_img
+{
+    width: 100%;
+    margin-bottom: var(--space-between-section);
+}
+
+.AdvImage_container .container
+{
+    padding: 0;
+}

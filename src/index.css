@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Inter');
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+  --black-color: #000;
+  --white-color: #fff;
+  --grey-color: #f5f5f5;
+  --grey-border: #ececec;
+  --header-height: 90px;
+  font-family: 'Inter';
+  --red-title: #db4444;
+  --seperate-bottom-border: #f0f0f0;
+  --space-between-section:30px;
+  --footer-height:270px;
+  --footer-bottom:-270px;
+}
+
+#root {
+	display: block;
+	width: 100%;
+	position: relative;
+	min-height: 100vh;
+}
+
+.container
+{
+	padding-left: 0;
+	padding-right: 0;
+}

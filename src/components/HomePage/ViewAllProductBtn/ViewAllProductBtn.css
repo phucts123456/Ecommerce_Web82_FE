@@ -1,0 +1,12 @@
+.view_all_product_btn_container .view_all_product_btn
+{
+    background-color: var(--red-title) !important;
+    color: var(--white-color);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.view_all_product_btn_container
+{
+    text-align: center;
+}

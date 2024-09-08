@@ -1,0 +1,19 @@
+.today_sales_header_container
+{
+    display: flex;
+    align-items: center;
+}
+
+.today_sales_header_triangle_container
+{
+    width: 17px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: var(--red-title);
+}
+
+.today_sales_header_title
+{
+    margin-left: 15px;
+    color: var(--red-title);
+}
