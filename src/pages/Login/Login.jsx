@@ -1,35 +1,55 @@
 import React, {useState} from 'react'
 import './Login.css'
+import {loginUser} from '../../apis/user'
+
 function Login() {
     const [userName, setUserName] = useState("");
     const [password , setPassword] = useState("");
     const [isSuccess , setIsSuccess] = useState(false);
     const [error, setError] = useState("");
     const login = () => {
-        const usersFromDB = localStorage.getItem("user");     
-        if(usersFromDB != null)
-        {
-            const userList = JSON.parse(usersFromDB);
-            const loginUser = userList.find((user) => user.userName == userName && user.password == password);
-            if(loginUser != null)
-            {
-                localStorage.setItem('loginUser', JSON.stringify(loginUser));
-                setIsSuccess(true);
-                setError('');
-                setTimeout(() => {                 
-                    setIsSuccess(false);
-                    document.location.href = '/',true;
-                }, 2000);
+            // const userList = JSON.parse(usersFromDB);
+            // const loginUser = userList.find((user) => user.userName == userName && user.password == password);
+            // if(loginUser != null)
+            // {
+            //     localStorage.setItem('loginUser', JSON.stringify(loginUser));
+            //     setIsSuccess(true);
+            //     setError('');
+            //     setTimeout(() => {                 
+            //         setIsSuccess(false);
+            //         document.location.href = '/',true;
+            //     }, 2000);
+            // }
+            // else
+            // {
+            //     setError("Wrong username or password");
+            // }
+            setError("")
+            console.log(userName)
+            console.log(password)
+            const loginUser = {
+                userName: userName,
+                password: password,
             }
-            else
-            {
-                setError("Wrong username or password");
+            doLoginProcess(loginUser);
+    }
+
+    const doLoginProcess = (user) => {
+        console.log("doLogin")
+        const userLogin = loginUser(user).then((response) => {
+            console.log(response)
+            if(response.data.accessToken) {
+                localStorage.setItem("accessToken", response.data.accessToken);
             }
-        }
-        else
-        {
-            setError("Wrong username or password");
-        }
+            setIsSuccess(true);
+           setTimeout(() => {
+               location.href = "/"
+           }, 2000)
+        }).catch((error) => {
+            if(error.response.data.message)
+                setError(error.response.data.message)
+            console.log(error)
+        })
     }
     
     return (

@@ -1,9 +1,12 @@
 import React, {useState} from 'react'
 import './Register.css'
+import {loginUser, registUser} from '../../apis/user'
 function Register() {
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [address, setAddress] = useState("");
+    const [fullName, setFullName] = useState("");
     const [password , setPassword] = useState("");
     const [rePassword , setRePassword] = useState("");
     const [errorPassword, setErrorPassword] = useState("");
@@ -12,6 +15,9 @@ function Register() {
     const [ errorUserName , setErrorUserName] = useState("");
     const [ errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [ errorEmail, setErrorEmail] = useState('');
+    const [ errorFullName, setErrorFullName] = useState('');
+    const [ errorAddress, setErrorAddress] = useState('');
+    const [ errorRegist, setErrorRegist] = useState('');
 
 
     const isEmail = (input) => {
@@ -47,6 +53,10 @@ function Register() {
     const validateLogin = () =>{
         const validateUserName = isLength(userName, 'User name', 5);
             setErrorUserName(validateUserName != '' ? validateUserName : '');
+        const validateFullName = isLength(fullName, 'Full name', 5);
+            setErrorFullName(validateFullName != '' ? validateFullName : '');
+        const validateAddress = isLength(fullName, 'Address', 10);
+            setErrorAddress(validateAddress != '' ? validateAddress : '');
         const validatePassword = isLength(password, 'Password', 5);
             setErrorPassword(validatePassword != '' ? validatePassword : '');
         const validatePhoneNumber = isLength(phoneNumber, 'Phone number', 10);
@@ -57,8 +67,13 @@ function Register() {
             || validatePassword != '' 
             || validatePhoneNumber != '' 
             || validateEmail != '' 
+            || validateFullName != '' 
     }
-    const register = () => {
+    const resetMsg = () => {
+        setIsRegistFail(false);
+    }
+    const register = async () => {
+        resetMsg();
         let error = validateLogin();
         if(error == '') error = validateFormat();
         else setIsRegistFail(true);
@@ -74,49 +89,54 @@ function Register() {
             setIsRegistFail(true);
         }
         if(error != '') return;
-        const usersFromDB = localStorage.getItem("user");     
-        if(usersFromDB != null)
-        {
-            const userList = JSON.parse(usersFromDB);
-            if(userList.find((user) => user.userName == userName) != null)
-            {
-                alert("user existed");
-                return;
-            }
-            const userId = userList.length + 1;
-            const newUser = {
-                userId:userId,
-                userName:userName,
-                email:email,
-                phoneNumber:phoneNumber,
-                password:password
-            } 
+        const userToRegist = {
+            userName: userName,
+            password: password,
+            phoneNumber: phoneNumber,
+            fullName: fullName,
+            role: 'customer',
+            email: email,
+            address: address
+        }
+        const registResult = registUser(userToRegist).then(function(response) {    
+            console.log("response")  
+            console.log(response)  
+            if (response.status === 201) {
 
-            userList.push(newUser);
-            localStorage.setItem("user", JSON.stringify(userList));
-            setIsSuccess(true);
-            setTimeout(() => {
+            }
+            else {
                 setIsSuccess(false);
-                document.location.href = '/login',true;
-            },2000);
-        }
-        else
-        {
-            const newUser = [{
-                userId: 1,
-                userName: userName,
-                email: email,
-                phoneNumber: phoneNumber,
-                password: password
-            }]
-            localStorage.setItem("user", JSON.stringify(newUser));
-            setIsSuccess(true);
-            setTimeout(() => {
-                setIsSuccess(false);
-                document.location.href = '/login',true;
-            },2000);
-        }
+                setErrorRegist()
+            }
+        })
+        
+        .catch(function(err){
+            console.log("err")
+            setIsRegistFail(true);
+            console.log(err.response.data.message)
+            setErrorRegist(err.response.data.message);
+        })
+        .then(() => {
+            doLoginProcess(userToRegist);
+        })
     }
+
+    const doLoginProcess = (user) => {
+        console.log("doLogin")
+        const userLogin = loginUser(user).then((response) => {
+            console.log(response)
+            if(response.data.accessToken) {
+                localStorage.setItem("accessToken", response.data.accessToken);
+            }
+            setIsSuccess(true);
+           setTimeout(() => {
+               location.href = "/"
+           }, 2000)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
     return (
         <>
             {
@@ -126,7 +146,7 @@ function Register() {
                             <div class="wrapper" style={{display:'flex',flexDirection:'column'}}> 
                             <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"> <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/> <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                             </svg>
-                            <p>Regist success</p>
+                            <p>Regist success. Welcome user</p>
                             </div>
                         </div>
                     </div>
@@ -145,6 +165,10 @@ function Register() {
                         </div>
                         { errorUserName != '' && isRegistFail ? <p style={{color:'red'}}>{errorUserName}</p> : ""}
                         <div className='login_right_input_container'>
+                            <input className='login_right_input login_right_input_full_name' placeholder='Enter your full name' onChange={(e) => setFullName(e.target.value)} />
+                        </div>
+                        { errorFullName != '' && isRegistFail ? <p style={{color:'red'}}>{errorFullName}</p> : ""}
+                        <div className='login_right_input_container'>
                             <input className='login_right_input login_right_input_email' placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         { errorEmail != '' && isRegistFail ? <p style={{color:'red'}}>{errorEmail}</p> : ""}
@@ -152,6 +176,10 @@ function Register() {
                             <input className='login_right_input login_right_input_phone_number' placeholder='Enter your phone number' onChange={(e) => setPhoneNumber(e.target.value)} />
                         </div>
                         { errorPhoneNumber != '' && isRegistFail ? <p style={{color:'red'}}>{errorPhoneNumber}</p> : ""}
+                        <div className='login_right_input_container'>
+                            <input className='login_right_input login_right_input_address' placeholder='Enter your address' onChange={(e) => setAddress(e.target.value)} />
+                        </div>
+                        { errorAddress != '' && isRegistFail ? <p style={{color:'red'}}>{errorAddress}</p> : ""}
                         <div className='login_right_input_container'>
                             <input type={"password"} className='login_right_input login_right_input_password' placeholder='Enter your password' onChange={(e) => setPassword(e.target.value)} />                                    
                         </div>
@@ -163,6 +191,7 @@ function Register() {
                             <button className='login_right_input login_right_submit_btn' onClick={() => register()}>Register</button>
                             <a href='/login'>Already have an account?</a>
                         </div>
+                        { isRegistFail === true && errorRegist != '' ? <p style={{color:'red'}}>{errorRegist}</p> : ""}
                     </div>
                 </div>
             </div>
