@@ -7,7 +7,7 @@ function SearchBar() {
   const checkSubmit = (e) => {
     if(e.keyCode == 10 || e.keyCode == 13)
     {
-      window.location.href = `/product_list?page=1&title=${title}`;
+      window.location.href = `/product_list?pn=1&sk=${title}`;
     }  
   }
   return (

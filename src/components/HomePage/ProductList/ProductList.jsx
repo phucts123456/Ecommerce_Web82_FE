@@ -9,11 +9,11 @@ function ProductList({products}) {
         products != "" ?
         products?.map((item) => {
           return <ProductItem 
-            title={item.title} 
+            title={item.name} 
             discount={40} 
             image={item.image} 
             price={item.price} 
-            rating={item.rating} 
+            rating={item.rate} 
             id={item.id} />
         }) : 
         <div class="lds-ring"><div></div><div></div><div></div><div></div></div>

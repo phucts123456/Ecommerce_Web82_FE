@@ -1,29 +1,22 @@
 import React, {useState} from 'react'
 import './Login.css'
 import {loginUser} from '../../apis/user'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Login() {
     const [userName, setUserName] = useState("");
     const [password , setPassword] = useState("");
     const [isSuccess , setIsSuccess] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const { state } = useLocation();
+    const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
+    useEffect(() => {
+        if(isLogin)
+            navigate("/product_list");
+    }, [])
     const login = () => {
-            // const userList = JSON.parse(usersFromDB);
-            // const loginUser = userList.find((user) => user.userName == userName && user.password == password);
-            // if(loginUser != null)
-            // {
-            //     localStorage.setItem('loginUser', JSON.stringify(loginUser));
-            //     setIsSuccess(true);
-            //     setError('');
-            //     setTimeout(() => {                 
-            //         setIsSuccess(false);
-            //         document.location.href = '/',true;
-            //     }, 2000);
-            // }
-            // else
-            // {
-            //     setError("Wrong username or password");
-            // }
             setError("")
             console.log(userName)
             console.log(password)
@@ -51,9 +44,10 @@ function Login() {
             console.log(error)
         })
     }
-    
     return (
-        <>        
+        isLogin ?
+        <div></div>
+        :<>  
             {
                 isSuccess ?
                     <div id="myModal" class="modal">

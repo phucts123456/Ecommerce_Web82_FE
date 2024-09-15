@@ -1,7 +1,6 @@
 .product_list_container
 {
     display: flex;
-    justify-content: space-between;
 }
 
 .product_list_container .product_item_container

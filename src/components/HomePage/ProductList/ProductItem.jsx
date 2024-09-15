@@ -6,10 +6,20 @@ function ProductItem({title, price, description, category, image, rating, discou
     const calculatePrice = () => {
         return discount > 0 ? Math.round(price - ((price * discount) / 100),3) : Math.round(price,3);
     }
+    const getAverageRate = () => {
+      if(rating.length > 0) {
+        let sum = 0;
+        for(const rate of rating) {
+          sum += rate.rate;
+        }
+        return Math.ceil(sum/rating.length);
+      }
+      return 0;
+    }
     const getRatting = () => {
         let a = [];
         for (let index = 1; index <= maxRating; index++) {
-            a.push((index <= rating.rate)
+            a.push((index <= getAverageRate())
                 ? <img className='product_item_rating_star_image' src='/img/golden_star.svg'></img> 
                 : <img className='product_item_rating_star_image' src='/img/grey_star.svg'></img>);
         }
@@ -33,7 +43,7 @@ function ProductItem({title, price, description, category, image, rating, discou
             </div>
             <div className="product_item_rating">
                 <div className="product_item_rating_star">{getRatting()}</div>
-                <div className="product_item_rating_count">({rating.count})</div>
+                <div className="product_item_rating_count">({rating.length})</div>
             </div>
           </div>
         </Link>

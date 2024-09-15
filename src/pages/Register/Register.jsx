@@ -18,8 +18,12 @@ function Register() {
     const [ errorFullName, setErrorFullName] = useState('');
     const [ errorAddress, setErrorAddress] = useState('');
     const [ errorRegist, setErrorRegist] = useState('');
+    const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
 
-
+    useEffect(() => {
+        if(isLogin)
+            navigate("/product_list");
+    }, [])
     const isEmail = (input) => {
         const validPassword = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
         if(validPassword.test(input) == false)
@@ -138,7 +142,9 @@ function Register() {
     }
 
     return (
-        <>
+        isLogin
+        ? <div></div>
+        :<>
             {
                 isSuccess ?
                     <div id="myModal" class="modal">

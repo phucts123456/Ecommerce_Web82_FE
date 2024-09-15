@@ -6,56 +6,40 @@ import ProductItem from '../../components/HomePage/ProductList/ProductItem';
 import './ProductList.css'
 import { Link } from 'react-router-dom';
 import { Select} from 'antd'
+import { getProductList } from '../../apis/product';
 function ProductList() {
-  const productPerPage = 15;
   let [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState('');
   const [totalPage, setTotalPage] = useState(0);
   const category = searchParams.get("category");
-  const title = searchParams.get("title");
-  const page = searchParams.get("page") != null ? searchParams.get("page")  : 1;
+  const searchKey = searchParams.get("sk") != null ? searchParams.get("sk")  : "";
+  const pageNumber = searchParams.get("pn") != null ? searchParams.get("pn")  : 1;
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    let endPoint = category != null ? `/products/category/${category}` : '/products'
-    axiosClient.get(endPoint)
-    .then(function (response) {   
-        if(response.status == '200')
-        {
-          const productsFromApi = JSON.stringify(response.data);
-          let productList = JSON.parse(productsFromApi);
-          setTotalPage(Math.ceil(productList.length / productPerPage));
-          let productListPaginated = productList.slice((page - 1) * productPerPage, page * productPerPage);
-          if(title != null)
-          {
-            productListPaginated = productListPaginated.filter(function(product) {
-              if (product['title'].toLowerCase().includes(title)) 
-              {
-                return true;
-              }
-              return false;
-            });
-            setTotalPage(Math.ceil(productListPaginated.length / productPerPage));
-          }
-          setProducts(productListPaginated);
-        }
-        else
-        {
-          console.log("status not 200: "+ response);
-        }
-      })
-    .catch(function (error) {
-        console.log(error);
-    })
-    .finally(function () {
-    });
-  }, [page])
+    setIsLoading(true);
+    console.log("pageNumber")
+    console.log(pageNumber)
+    console.log("searchKey")
+    console.log(searchKey)
+    const productList = getProductList(pageNumber, searchKey).then((response) => {
+      console.log("response.data.data.items");
+      console.log(response.data.data.items);
+      setProducts(response.data.data.items);
+      setTotalPage(response.data.data.totalPage);
+      setIsLoading(false);
+    }).catch((error) => {
+      console.log(error);
+      setIsLoading(false);
+    }
+    );
+  }, [])
 
   const getPagination = () => 
   {
     let links = [];
     for (let index = 1; index <= totalPage; index++) {
-        if(page == index)
+        if(pageNumber == index)
         {
-
             links.push(<Button className='active page_index' href={`/product_list?page=${index}`}>{index}</Button>)
         }
         else { 
@@ -70,10 +54,10 @@ function ProductList() {
       
       case 'name_desc':
         sortedProduct = products.sort(function(a,b) {
-          if (a.title > b.title) {
+          if (a.name > b.name) {
             return -1;
           }
-          if (a.title < b.title) {
+          if (a.name < b.name) {
             return 1;
           }
           return 0;
@@ -83,10 +67,10 @@ function ProductList() {
       break;
       case 'name_asc':
         sortedProduct = products.sort(function(a,b) {
-          if (a.title < b.title) {
+          if (a.name < b.name) {
             return -1;
           }
-          if (a.title > b.title) {
+          if (a.name > b.name) {
             return 1;
           }
         
@@ -152,25 +136,25 @@ function ProductList() {
             products != "" ?
             products?.map((item) => {
             return <ProductItem 
-                title={item.title} 
+                title={item.name} 
                 discount={""} 
                 image={item.image} 
                 price={item.price} 
-                rating={item.rating} 
+                rating={item.rate} 
                 id={item.id}/>
             }) : ""
         }
         </div>
         {
-          products != "" 
-          ?
+          isLoading === false
+          ? products.length > 0 ?
             <div className='product_pagination'>
-              <Button href={`/product_list?page=${Number.parseInt(page)-1}`} className='change_page_btn' disabled={page == 1 ? true: false}>Back</Button>
+              <Button href={`/product_list?page=${Number.parseInt(pageNumber)-1}`} className='change_page_btn' disabled={pageNumber == 1 ? true: false}>Back</Button>
               {
                   getPagination()
               }
-              <Button href={`/product_list?page=${Number.parseInt(page)+1}`} className='change_page_btn' disabled={page == totalPage ? true: false}>Next</Button>
-            </div>
+              <Button href={`/product_list?page=${Number.parseInt(pageNumber)+1}`} className='change_page_btn' disabled={pageNumber == totalPage ? true: false}>Next</Button>
+            </div> : <p style={{color:'red'}}>No product found</p>
           : 
           <>
             <div class="loading">

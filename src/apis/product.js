@@ -1,24 +1,15 @@
 import axiosClient from "../apis/axiosInstance";
 
-function getProductList(limit)
+function getProductList(pageNumber, searchKey)
 {
     let product = null; 
-    axiosClient.get('/products', 
+    return axiosClient.get('/products', 
     {
         params:{
-          limit:limit
+          pn:pageNumber,
+          sk:searchKey
         }
     })
-    .then(function (response) {
-        if(response.status == '200')
-            product = JSON.stringify(response.data);
-      })
-    .catch(function (error) {
-        console.log(error);
-    })
-    .finally(async function () {
-     return product;
-    });
 }
 
 function getProductById(id)
@@ -44,4 +35,4 @@ function getProductByCategory()
 }
 
 
-export {getProductList, getProductById, getProductByCategory}
+export {getProductList}

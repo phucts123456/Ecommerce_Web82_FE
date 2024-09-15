@@ -2,7 +2,6 @@ import UserContext from "./userContext";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Navigate, Outlet, redirect  } from 'react-router-dom';
-import Login from "../pages/Login/Login";
 
 const PrivateRoute = (props) => {
     const [user, setUser] = useState(null);
