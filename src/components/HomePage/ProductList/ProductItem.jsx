@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-function ProductItem({title, price, description, category, image, rating, discount,id }) {
+function ProductItem({title, price, description, category, image, rating, discount, id }) {
     const maxRating = 5;
     const calculatePrice = () => {
         return discount > 0 ? Math.round(price - ((price * discount) / 100),3) : Math.round(price,3);
@@ -28,7 +28,7 @@ function ProductItem({title, price, description, category, image, rating, discou
     return (
       <div className='product_item_container'>  
   
-        <Link to={`/product_detail?productId=${id}&discount=${discount}`}>
+        <Link to={`/product_detail?productId=${id}`}>
           <div className='product_item_image_discount_container'>
             <img className='product_item_image' src={image} alt={title} />
             {discount != '' && discount != null ? <div className='product_item_discount'>-{discount}%</div> : ''}

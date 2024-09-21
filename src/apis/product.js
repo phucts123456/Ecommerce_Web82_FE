@@ -14,13 +14,7 @@ function getProductList(pageNumber, searchKey)
 
 function getProductById(id)
 {
-    axiosClient.get('/products/'+id) 
-    .catch(function (error) {
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-      });;
+   return axiosClient.get('/products/'+id) 
 }
 
 function getProductByCategory()
@@ -35,4 +29,4 @@ function getProductByCategory()
 }
 
 
-export {getProductList}
+export {getProductList, getProductById, }

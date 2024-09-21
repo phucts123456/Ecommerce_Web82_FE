@@ -14,7 +14,7 @@ function ProductList({products}) {
             image={item.image} 
             price={item.price} 
             rating={item.rate} 
-            id={item.id} />
+            id={item._id} />
         }) : 
         <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
       }

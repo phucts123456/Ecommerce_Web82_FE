@@ -141,7 +141,7 @@ function ProductList() {
                 image={item.image} 
                 price={item.price} 
                 rating={item.rate} 
-                id={item.id}/>
+                id={item._id}/>
             }) : ""
         }
         </div>

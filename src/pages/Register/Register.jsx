@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './Register.css'
 import {loginUser, registUser} from '../../apis/user'
 function Register() {
