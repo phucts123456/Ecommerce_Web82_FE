@@ -36,12 +36,12 @@ function ProductDetail() {
                 </div>
                 <ProductSingle 
                   discount={discount !== undefined ? discount : 0}
-                  title={product?.name !== undefined ? product?.name : ''}
+                  name={product?.name !== undefined ? product?.name : ''}
                   rating={product?.rating !== undefined ? product?.rating : {rate:0,count:0}}
                   price={product?.price !== undefined ? product?.price : 0}
                   description={product?.description !== undefined ? product?.description : ""}
-                  id={product?.id !== undefined ? product?.id : ""}
-                  key={product?.id !== undefined ? product?.id : ""}
+                  id={product?._id !== undefined ? product?._id : ""}
+                  key={product?._id !== undefined ? product?._id : ""}
                   category={product?.category !== undefined ? product?.category : ""}
                   image={product?.image !== undefined ? product?.image : ""}/>
               </> 

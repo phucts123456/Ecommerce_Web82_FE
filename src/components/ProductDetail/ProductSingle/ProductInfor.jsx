@@ -2,7 +2,7 @@ import { Button } from 'bootstrap';
 import React from 'react'
 import { useState, useRef } from 'react';
 import AdvImage from '../../HomePage/AdvImage/AdvImage';
-function ProductInfor({title,rating,price,description,image,id,category,discount}) {
+function ProductInfor({name,rating,price,description,image,id,category,discount}) {
   const [inputValue, setInputValue] = useState(1);
   const maxRating = 5;
   const calculatePrice = () => {
@@ -22,12 +22,12 @@ function ProductInfor({title,rating,price,description,image,id,category,discount
 function isDecimal(num) {
   return (num ^ 0) !== num;
 }
-function addCart(productId, title, image, inputQuantity,discount,price)
+function addCart(productId, name, image, inputQuantity,discount,price)
 {
-  let loginUser = localStorage.getItem("loginUser") != null 
-    ? JSON.parse(localStorage.getItem("loginUser")) 
-    : null;
-  if(loginUser == null) 
+  let isLoggedIn = localStorage.getItem("accessToken") != null;
+  console.log("isLoggedIn")
+  console.log(isLoggedIn)
+  if(!isLoggedIn) 
   {
     window.location.href = '/login';
     return;
@@ -43,8 +43,8 @@ function addCart(productId, title, image, inputQuantity,discount,price)
   {
     localStorage.removeItem("applyCoupon");
     var cartProduct = {
-      productId: productId,
-      title: title,
+      productId: id,
+      title: name,
       price: calculatePrice(),
       quantity: inputQuantity,
       discount: discount,
@@ -78,8 +78,8 @@ function addCart(productId, title, image, inputQuantity,discount,price)
     else
     {
       var cartProduct = {
-          productId: productId,
-          title: title,
+          productId: id,
+          title: name,
           price: calculatePrice(),
           quantity: inputQuantity,   
           discount: discount,
@@ -105,7 +105,7 @@ function handleClick(action)
 }
   return (
     <div className='product_info_container'>
-        <h2 className='product_info_name'>{title}</h2>
+        <h2 className='product_info_name'>{name}</h2>
         <div className='product_info_ratting'>
             <div className="product_item_rating_star">{getRatting()}</div>
             <div className="product_item_rating_count">({rating.count} reviews)</div>
@@ -118,7 +118,7 @@ function handleClick(action)
               <input onChange={(e) => setInputValue(e.target.value)} value={inputValue} className="product_info_quantity_input" type={'number'} />
               <button onClick={() =>{handleClick("add")}}  className='product_info_quantity_btn product_info_quantity_add_btn'>+</button>
             </div>
-            <div className='product_info_buy' onClick={() => {addCart(id,title,image,inputValue <= 0 ? 0 : inputValue,discount,price)}}><button>Buy Now</button></div>
+            <div className='product_info_buy' onClick={() => {addCart(id,name,image,inputValue <= 0 ? 0 : inputValue,discount,price)}}><button>Buy Now</button></div>
         </div>
         <AdvImage img={'/img/service_product_detail.png'} />
     </div>
