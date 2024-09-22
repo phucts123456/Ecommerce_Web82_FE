@@ -11,9 +11,9 @@ function ProductList() {
   let [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState('');
   const [totalPage, setTotalPage] = useState(0);
-  const category = searchParams.get("category");
   const searchKey = searchParams.get("sk") != null ? searchParams.get("sk")  : "";
   const pageNumber = searchParams.get("pn") != null ? searchParams.get("pn")  : 1;
+  const category = searchParams.get("c") != null ? searchParams.get("c")  : "";
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     setIsLoading(true);
@@ -21,7 +21,9 @@ function ProductList() {
     console.log(pageNumber)
     console.log("searchKey")
     console.log(searchKey)
-    const productList = getProductList(pageNumber, searchKey).then((response) => {
+    console.log("category")
+    console.log(category)
+    const productList = getProductList(pageNumber, searchKey, category).then((response) => {
       console.log("response.data.data.items");
       console.log(response.data.data.items);
       setProducts(response.data.data.items);

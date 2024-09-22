@@ -3,6 +3,10 @@ import { useState,useEffect } from 'react'
 import { Container } from 'react-bootstrap'
 import './CheckOut.css'
 import { Button } from 'antd'
+import { createOrder } from '../../apis/order';
+import constants from '../../data/constants'
+import { useLocation, useNavigate } from 'react-router-dom';
+
 function CheckOut() {
     const [ cartData, setCartData] = useState([]);
     const [ subTotal, setSubtotal] = useState(0);
@@ -24,7 +28,11 @@ function CheckOut() {
     const [ errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [ errorEmail, setErrorEmail] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
+    const navigate = useNavigate();
+
     useEffect(()=>{
+        if(!isLogin) navigate("/login");
         const cart = localStorage.getItem("cart");
         console.log("cart "+ typeof cart)
         if(cart != null && cart != '')
@@ -120,79 +128,46 @@ function CheckOut() {
         if(isError == false){
             isError = validateFormat();
         }
-        let orderHistory = localStorage.getItem("order") != null ? localStorage.getItem("order") : [];
-        let orderId = 1;
         if(isError != '') return;
-        if (orderHistory.length > 0)
-        {
-            console.log("history khacs nul");
-            let orderHistoryObject = JSON.parse(orderHistory);
-            orderId = orderHistoryObject.length + 1;
-            let loginUser = localStorage.getItem("loginUser") != null 
-                ? JSON.parse(localStorage.getItem("loginUser")) 
-                : null;
-            let userId = '';
-            if(loginUser != null) userId = loginUser.userId; 
-            let order = {
-                orderId:orderId,
-                cartData:cartData,
-                subTotal:subTotal,
-                discountPrice:discountPrice,
-                totalPrice:totalPrice,
-                orderDate: (new Date()).toDateString(),
-                user: {
-                    fullName:fullName,
-                    streetAddress:streetAddress,
-                    companyName:companyName,
-                    city:city,
-                    email:email,
-                    phoneNumber:phoneNumber,
-                    apartment:apartment,
-                    userId:userId
-                }
+        let items = []
+        for (const orderItem of cartData) {
+            const newOrderItem = {
+                productId: orderItem.productId,
+                price: orderItem.price,
+                quantity: orderItem.quantity
             }
-            orderHistoryObject.push(order);
-            console.log("orderHistoryObject "+ JSON.stringify(orderHistoryObject))
-            localStorage.setItem("order", JSON.stringify(orderHistoryObject));
-            localStorage.removeItem("cart");
+            items.push(newOrderItem)
         }
-        else
-        {
-            let loginUser = localStorage.getItem("loginUser") != null 
-                ? JSON.parse(localStorage.getItem("loginUser")) 
-                : null;
-            let userId = '';
-            if(loginUser != null) userId = loginUser.userId; 
-            console.log("history null");
-            let order = [{
-                orderId:orderId,
-                cartData:cartData,
-                subTotal:subTotal,
-                discountPrice:discountPrice,
-                totalPrice:totalPrice,
-                orderDate: (new Date()).toDateString(),
-                user: {
-                    fullName:fullName,
-                    streetAddress:streetAddress,
-                    companyName:companyName,
-                    city:city,
-                    email:email,
-                    phoneNumber:phoneNumber,
-                    apartment:apartment,
-                    userId:userId
-                }
-            }]
-            localStorage.setItem("order", JSON.stringify(order));
-            localStorage.removeItem("cart");
+        const newOrder  = {
+            streetAddress:streetAddress,
+            companyName:companyName,
+            city:city,
+            status: constants.CONST_ORDER_STATUS_ORDERD,
+            email:email,
+            phoneNumber:phoneNumber,
+            apartment:apartment,
+            items:items,
+            totalPrice:totalPrice,
+            orderDate: (new Date()).toDateString(),
         }
-        if(isError == false)
-        {
-            setIsSuccess(true);
-            setTimeout(() => {
-                setIsSuccess(false);
-                window.location.href = "/";
-            },2000);
-        }
+        createOrder(newOrder).then((response) => {
+            setIsSuccess(true)
+        }).catch((error) => {
+            setIsSuccess(false);
+            if (error.status === 401) {
+                navigate("/login");
+                localStorage.setItem("msg", "Login session is end. Please login again.")
+            }
+            return
+        })
+        // if(isError == false)
+        // {
+        //     setIsSuccess(true);
+        //     setTimeout(() => {
+        //         setIsSuccess(false);
+        //         window.location.href = "/";
+        //     },2000);
+        // }
     }
   return (
     <>

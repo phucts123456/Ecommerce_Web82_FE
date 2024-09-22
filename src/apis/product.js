@@ -1,13 +1,13 @@
 import axiosClient from "../apis/axiosInstance";
 
-function getProductList(pageNumber, searchKey)
+function getProductList(pageNumber, searchKey, category)
 {
-    let product = null; 
     return axiosClient.get('/products', 
     {
         params:{
           pn:pageNumber,
-          sk:searchKey
+          sk:searchKey,
+          category:category
         }
     })
 }

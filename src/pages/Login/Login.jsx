@@ -13,8 +13,14 @@ function Login() {
     const { state } = useLocation();
     const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
     useEffect(() => {
-        if(isLogin)
-            navigate("/product_list");
+        if(isLogin) navigate("/product_list");
+        else {
+            const msg = localStorage.getItem("msg");
+            if(msg != null) {
+                setError(msg);
+                localStorage.removeItem("msg");
+            }
+        }
     }, [])
     const login = () => {
             setError("")

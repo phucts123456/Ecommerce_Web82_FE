@@ -1,15 +1,29 @@
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { getCategoryList } from '../../../apis/category'
 function CategoryList() {
+  const [categoryList, setCategoryList] = useState([]);
+  useEffect(() => {
+    getCategoryList().then((response) => {
+      console.log("category")
+      console.log(response)
+      setCategoryList(response.data.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+  })
   return (
-    <div className='category_list_container'>
-        <ul className='category_list'>
-            <li className='category_list_item'><a href="/product_list?category=men's clothing">Men fashion</a></li>
-            <li className='category_list_item'><a href="/product_list?category=women's clothing">Women fashion</a></li>
-            <li className='category_list_item'><a href='/product_list?category=electronics'>Electronics</a></li>
-            <li className='category_list_item'><a href='/product_list?category=jewelery'>Jewelery</a></li>
-        </ul>
-    </div>
+    categoryList.length > 0 
+    ? <>
+        <div className='category_list_container'>
+            <ul className='category_list'>
+             {categoryList.map((item) => {
+              return <li className='category_list_item'><a href={`/product_list?c=${item.name}`}>{item.name}</a></li>
+             })}                 
+            </ul>
+        </div>
+      </>
+    : ""
+   
   )
 }
 

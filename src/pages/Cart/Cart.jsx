@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 import { Container } from 'react-bootstrap'
 import couponList from '../../data/coupon'
 import './Cart.css'
+import { useLocation, useNavigate } from 'react-router-dom';
+
 function Cart() {
     const [ cartData, setCartData] = useState([]);
     const [ subTotal, setSubtotal] = useState(0);
@@ -12,7 +14,11 @@ function Cart() {
     const [ totalPrice, setTotalPrice] = useState(0);
     const [ selectedCoupon, setSelectedCoupon ] = useState("");
     const [ currCoupon, setCurrCoupon ] = useState(null);
+    const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
+    const navigate = useNavigate();
+
     useEffect(()=>{
+        if(!isLogin) navigate("/login");
         const cart = localStorage.getItem("cart");
         if(cart != null && cart != '')
         {
