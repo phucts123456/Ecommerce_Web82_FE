@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import { Button, Container } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
-import axiosClient from '../../apis/axiosInstance';
 import ProductItem from '../../components/HomePage/ProductList/ProductItem';
 import './ProductList.css'
-import { Link } from 'react-router-dom';
-import { Select} from 'antd'
 import { getProductList } from '../../apis/product';
+import constants from '../../data/constants';
+import { useContext } from 'react';
+import UserContext from '../../context/userContext';
 function ProductList() {
   let [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState('');
@@ -15,15 +15,10 @@ function ProductList() {
   const pageNumber = searchParams.get("pn") != null ? searchParams.get("pn")  : 1;
   const category = searchParams.get("c") != null ? searchParams.get("c")  : "";
   const [isLoading, setIsLoading] = useState(false);
+  const userContext = useContext(UserContext);
   useEffect(() => {
     setIsLoading(true);
-    console.log("pageNumber")
-    console.log(pageNumber)
-    console.log("searchKey")
-    console.log(searchKey)
-    console.log("category")
-    console.log(category)
-    const productList = getProductList(pageNumber, searchKey, category).then((response) => {
+    const productList = getProductList(pageNumber, searchKey, category, constants.CONST_PRODUCT_PER_PAGE).then((response) => {
       console.log("response.data.data.items");
       console.log(response.data.data.items);
       setProducts(response.data.data.items);
@@ -42,10 +37,10 @@ function ProductList() {
     for (let index = 1; index <= totalPage; index++) {
         if(pageNumber == index)
         {
-            links.push(<Button className='active page_index' href={`/product_list?page=${index}`}>{index}</Button>)
+            links.push(<Button className='active page_index' href={`/product_list?pn=${index}`}>{index}</Button>)
         }
         else { 
-            links.push(<Button className='page_index' href={`/product_list?page=${index}`}>{index}</Button>)
+            links.push(<Button className='page_index' href={`/product_list?pn=${index}`}>{index}</Button>)
         }
     }
     return links;
@@ -84,10 +79,12 @@ function ProductList() {
       break;
       case 'price_desc':
         sortedProduct = products.sort(function(a,b) {
-          if (a.price > b.price) {
+          const price_a = Number.parseInt(a.price);
+          const price_b = Number.parseInt(b.price);
+          if (price_a > price_b) {
             return -1;
           }
-          if (a.price < b.price) {
+          if (price_a < price_b) {
             return 1;
           }
         
@@ -99,10 +96,12 @@ function ProductList() {
       break;
       case 'price_asc':
         sortedProduct = products.sort(function(a,b) {
-          if (a.price < b.price) {
+          const price_a = Number.parseInt(a.price);
+          const price_b = Number.parseInt(b.price);
+          if (price_a < price_b) {
             return -1;
           }
-          if (a.price > b.price) {
+          if (price_a > price_b) {
             return 1;
           }
         
@@ -151,11 +150,11 @@ function ProductList() {
           isLoading === false
           ? products.length > 0 ?
             <div className='product_pagination'>
-              <Button href={`/product_list?page=${Number.parseInt(pageNumber)-1}`} className='change_page_btn' disabled={pageNumber == 1 ? true: false}>Back</Button>
+              <Button href={`/product_list?pn=${Number.parseInt(pageNumber)-1}`} className='change_page_btn' disabled={pageNumber == 1 ? true: false}>Back</Button>
               {
                   getPagination()
               }
-              <Button href={`/product_list?page=${Number.parseInt(pageNumber)+1}`} className='change_page_btn' disabled={pageNumber == totalPage ? true: false}>Next</Button>
+              <Button href={`/product_list?pn=${Number.parseInt(pageNumber)+1}`} className='change_page_btn' disabled={pageNumber == totalPage ? true: false}>Next</Button>
             </div> : <p style={{color:'red'}}>No product found</p>
           : 
           <>

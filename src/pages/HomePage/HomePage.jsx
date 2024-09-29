@@ -5,6 +5,8 @@ import CategoryList from '../../components/HomePage/CategoryList/CategoryList'
 import FeaturedProducts from '../../components/HomePage/FeaturedProducts/FeaturedProducts'
 import TodaySales from '../../components/HomePage/TodaySales/TodaySales'
 import './HomePage.css'
+import UserContext from "../../context/userContext";
+import { useContext } from 'react';
 function HomePage() {
   return (
     <div className='home_page_container'>

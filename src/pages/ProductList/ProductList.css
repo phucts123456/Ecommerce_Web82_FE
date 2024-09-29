@@ -15,7 +15,9 @@
     margin: 20px 0;
     justify-content: space-between;
 }
-
+.product_list_container .container .filter_bar h3 {
+  color: var(--black-color);
+}
 .product_list_container .container .product_list_filter
 {
     display: flex;

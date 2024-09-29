@@ -3,14 +3,12 @@ import { getCategoryList } from '../../../apis/category'
 function CategoryList() {
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
-    getCategoryList().then((response) => {
-      console.log("category")
-      console.log(response)
-      setCategoryList(response.data.data);
+    getCategoryList(1,4).then((response) => {
+      setCategoryList(response.data.data.items);
     }).catch((error) => {
       console.log(error);
     });
-  })
+  }, [])
   return (
     categoryList.length > 0 
     ? <>

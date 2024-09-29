@@ -1,13 +1,14 @@
 import axiosClient from "../apis/axiosInstance";
-
-function getProductList(pageNumber, searchKey, category)
+import constants from "../data/constants"
+function getProductList(pageNumber, searchKey, category, limit)
 {
     return axiosClient.get('/products', 
     {
         params:{
           pn:pageNumber,
           sk:searchKey,
-          category:category
+          category:category,
+          limit: limit
         }
     })
 }

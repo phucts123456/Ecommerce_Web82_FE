@@ -9,30 +9,7 @@ import { getProductList } from '../../../apis/product';
 function TodaySales() {
   const [products, setProducts] = useState('');
   useEffect(() => {
-    // axiosClient.get('/products', 
-    // {
-    //     params:{
-    //       limit:5
-    //     }
-    // })
-    // .then(function (response) {   
-    //     if(response.status == '200')
-    //     {
-    //       const productsFromApi = JSON.stringify(response.data);
-    //       console.log("productsFromApi "+ productsFromApi);
-    //       setProducts(JSON.parse(productsFromApi));
-    //     }
-    //     else
-    //     {
-    //       console.log("status not 200: "+ response);
-    //     }
-    //   })
-    // .catch(function (error) {
-    //     console.log(error);
-    // })
-    // .finally(function () {
-    // });
-    const productList = getProductList(1, "", 4).then((response) => {
+    const productList = getProductList(1, '', '', 5).then((response) => {
       if(response.data.data) {
         console.log("response.data.data.items")
         console.log(response.data.data.items)

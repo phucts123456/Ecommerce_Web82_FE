@@ -9,8 +9,7 @@ function ProductList({products}) {
         products != "" ?
         products?.map((item) => {
           return <ProductItem 
-            title={item.name} 
-            discount={40} 
+            title={item.name}
             image={item.image} 
             price={item.price} 
             rating={item.rate} 

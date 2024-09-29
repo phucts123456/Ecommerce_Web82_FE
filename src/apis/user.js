@@ -19,10 +19,15 @@ function loginUser(user) {
     return axiosClient.post(`${userEndpoint}${userLoginEndpoint}`, {
         userName: user.userName,
         password: user.password,
-      })
+    })
+}
+
+function getUserDetail(userId) {
+    return axiosClient.get(`${userEndpoint}/${userId}`);
 }
 
 export  {
     registUser,
-    loginUser
+    loginUser,
+    getUserDetail
 }

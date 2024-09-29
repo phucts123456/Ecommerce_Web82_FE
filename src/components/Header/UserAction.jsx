@@ -3,29 +3,16 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useEffect } from 'react';
-
+import { useContext } from 'react';
+import UserContext from '../../context/userContext';
 function UserAction() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") !== null);
   const [loginUser, setLoginUser] = useState({});
-  useEffect(() =>{
-    let loginUser = localStorage.getItem("loginUser") != null 
-      ? JSON.parse(localStorage.getItem("loginUser")) 
-      : null;
-    if(loginUser != null) 
-    {
-      setLoginUser(loginUser);
-      setIsLogin(true);
-    }
-    else{
-      setIsLogin(false);
-    }
-  },[])
+  const userContext = useContext(UserContext);
+  console.log(userContext)
   const logout = () => {
-    let loginUser = localStorage.getItem("loginUser") != null 
-      ? JSON.parse(localStorage.getItem("loginUser")) 
-      : null;
-    if(loginUser != null) 
-      localStorage.removeItem("loginUser");
+    if(isLogin) 
+      localStorage.removeItem("accessToken");
     window.location.href = '/'
   }
   return (
@@ -41,7 +28,7 @@ function UserAction() {
           {
             isLogin 
             ? <>
-                <li><a class="dropdown-item" href="#">Hello, {loginUser.userName} </a></li>
+                <li><a class="dropdown-item" href="#">Hello, {userContext.user.fullName} </a></li>
                 <li><a class="dropdown-item" href="/order_history_list">Order History</a></li>
                 <li><a class="dropdown-item" style={{cursor:'pointer'}} onClick={() =>logout()}>Logout</a></li>
               </>

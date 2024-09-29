@@ -19,6 +19,7 @@ import Register from './pages/Register/Register.jsx'
 import OrderHistoryList from './pages/OrderHistoryList/OrderHistoryList.jsx'
 import HistoryDetail from './pages/HistoryDetail/HistoryDetail.jsx'
 import PrivateRoute from './context/PrivateRoute'
+import UserStore from './context/UserStore'
 import Layout from './Layout.jsx'
 library.add(faMagnifyingGlass,faCartShopping,faCircleUser);
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -27,17 +28,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Routes>
       <Route path='/login' Component={Login} />
       <Route path='/register' Component={Register} />
-      <Route path="/" element={<Layout />}>
-        <Route index Component={HomePage} />
-        <Route exact path='*' Component={NotFound} />
-        <Route Component={PrivateRoute}>
-          <Route path='/product_detail' Component={ProductDetail} />
-          <Route path='/product_list' Component={ProductList} />
-          <Route path='/cart' Component={Cart} />
-          <Route path='/check_out' Component={CheckOut} />
-          <Route path='/order_history_list' Component={OrderHistoryList} />
-          <Route path='/order_history_detail' Component={HistoryDetail} />
-        </Route>  
+      <Route Component={UserStore}>
+        <Route path="/" element={<Layout />}>
+          <Route index Component={HomePage} />
+          <Route exact path='*' Component={NotFound} />
+          <Route Component={PrivateRoute}>
+            <Route path='/product_detail' Component={ProductDetail} />
+            <Route path='/product_list' Component={ProductList} />
+            <Route path='/cart' Component={Cart} />
+            <Route path='/check_out' Component={CheckOut} />
+            <Route path='/order_history_list' Component={OrderHistoryList} />
+            <Route path='/order_history_detail' Component={HistoryDetail} />
+          </Route>  
+        </Route>
       </Route>
     </Routes> 
   </BrowserRouter>,

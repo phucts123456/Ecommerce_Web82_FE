@@ -1,13 +1,13 @@
 import axiosClient from "../apis/axiosInstance";
 const orderEndpoint = "/categories"
 
-function getCategoryList(limit)
+function getCategoryList(pageSize, limit)
 {
-    let product = null; 
     return axiosClient.get(`${orderEndpoint}`, 
     {
         params:{
-          limit:limit,
+            pn: pageSize,
+            limit:limit,
         }
     })
 }
