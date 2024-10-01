@@ -28,7 +28,7 @@ function UserAction() {
           {
             isLogin 
             ? <>
-                <li><a class="dropdown-item" href="#">Hello, {userContext.user.fullName} </a></li>
+                <li><a class="dropdown-item" href="#">Hello, {userContext.user?.fullName} </a></li>
                 <li><a class="dropdown-item" href="/order_history_list">Order History</a></li>
                 <li><a class="dropdown-item" style={{cursor:'pointer'}} onClick={() =>logout()}>Logout</a></li>
               </>

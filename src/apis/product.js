@@ -29,5 +29,15 @@ function getProductByCategory()
       });;
 }
 
+function checkProductStock(pid, quantityAdCart)
+{
+  return axiosClient.get('/products/checkStock', 
+  {
+      params:{
+        pid:pid,
+        quantity:quantityAdCart,
+      }
+  })
+}
 
-export {getProductList, getProductById, }
+export {getProductList, getProductById, checkProductStock}

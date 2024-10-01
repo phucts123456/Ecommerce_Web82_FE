@@ -150,14 +150,14 @@ function Cart() {
                     && cartData != '' 
                     ?   
                         <div className='coupon_and_subtotal_container'>
-                            <div className='coupon_container'>
+                            {/* <div className='coupon_container'>
                                 <select className='coupon_ddl' onChange={(e) => setSelectedCoupon(e.target.value)}>
-                                    {/* <Option value=""></Option>
+                                    <Option value=""></Option>
                                     {
                                         couponList.map((coupon) =>{
                                             return <Option value={coupon.couponId}>{coupon.couponId} - {coupon.discount}%</Option>
                                         })
-                                    } */}
+                                    }
                                    <option value=""></option>
                                     {
                                         couponList.map((coupon) =>{
@@ -167,7 +167,7 @@ function Cart() {
                                 </select>
                                 <button className='coupon_use_btn' onClick={ApplyCoupon}>Use Coupon</button>
                                 <div className='coupon_msg'>{currCoupon?.couponId != null ? `Coupon ${currCoupon?.couponId} is applied. You get ${currCoupon?.discount}% discount` : ""}</div>
-                            </div>
+                            </div> */}
                             <div className='subtotal_container'>
                                 <h2 className='subtotal_title'>
                                     Cart total

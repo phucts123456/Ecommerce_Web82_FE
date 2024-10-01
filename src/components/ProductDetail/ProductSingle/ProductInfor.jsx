@@ -2,8 +2,10 @@ import { Button } from 'bootstrap';
 import React from 'react'
 import { useState, useRef } from 'react';
 import AdvImage from '../../HomePage/AdvImage/AdvImage';
+import {checkProductStock} from '../../../apis/product'
 function ProductInfor({name,rating,price,description,image,id,category,discount}) {
   const [inputValue, setInputValue] = useState(1);
+  const [message, setMessage] = useState("");
   const maxRating = 5;
   const calculatePrice = () => {
     return discount > 0 ? Math.round(price - ((price * discount) / 100),3) : Math.round(price,3);
@@ -24,9 +26,9 @@ function isDecimal(num) {
 }
 function addCart(productId, name, image, inputQuantity,discount,price)
 {
+  setMessage("")
   let isLoggedIn = localStorage.getItem("accessToken") != null;
-  console.log("isLoggedIn")
-  console.log(isLoggedIn)
+  
   if(!isLoggedIn) 
   {
     window.location.href = '/login';
@@ -38,58 +40,64 @@ function addCart(productId, name, image, inputQuantity,discount,price)
     alert("Quantity must larger or equal to 1 or without decimal parts");
     return;
   }
-  const cart = localStorage.getItem("cart");
-  if(cart == null || cart == '')
-  {
-    localStorage.removeItem("applyCoupon");
-    var cartProduct = {
-      productId: id,
-      title: name,
-      price: calculatePrice(),
-      quantity: inputQuantity,
-      discount: discount,
-      image: image
-    }
-    let cartProductList = [];
-    cartProductList.push(cartProduct);
-    localStorage.setItem("cart" , JSON.stringify(cartProductList));
-    const cartAfterAdd = localStorage.getItem("cart");
-    console.log('Cart Nay:'+ cartAfterAdd);
-  }
-  else
-  {
-    console.log("cart not null");
-    let cartProductList = JSON.parse(cart);
-    console.log("cartProductList ");
-    console.log(cartProductList);
-    let cartToUpdate = cartProductList.find((cartProduct) => cartProduct.productId == productId && cartProduct.price == Math.round(price));
-    console.log("cartToUpdate ");
-    console.log(cartToUpdate);
-    if(cartToUpdate != null)
-    {
-      console.log("cart khac null");
-      var tempCartProductList = cartProductList.filter((product) => product.productId != productId);
-      console.log("tempCartProductList " + tempCartProductList);
-      cartToUpdate.quantity = Number.parseInt(cartToUpdate.quantity) + Number.parseInt(inputQuantity);
-      cartToUpdate.price = calculatePrice();
-      tempCartProductList = [...tempCartProductList, cartToUpdate];
-      localStorage.setItem("cart" , JSON.stringify(tempCartProductList));
-    }
-    else
-    {
-      var cartProduct = {
+  checkProductStock(id, inputQuantity).then((response) => {
+    if (response.status === 200) {
+      const cart = localStorage.getItem("cart");
+      if(cart == null || cart == '')
+      {
+        localStorage.removeItem("applyCoupon");
+        var cartProduct = {
           productId: id,
           title: name,
           price: calculatePrice(),
-          quantity: inputQuantity,   
+          quantity: inputQuantity,
           discount: discount,
           image: image
+        }
+        let cartProductList = [];
+        cartProductList.push(cartProduct);
+        localStorage.setItem("cart" , JSON.stringify(cartProductList));
+        const cartAfterAdd = localStorage.getItem("cart");
+        console.log('Cart Nay:'+ cartAfterAdd);
       }
-      cartProductList = [...cartProductList, cartProduct];
-      localStorage.setItem("cart" , JSON.stringify(cartProductList));      
+      else
+      {
+        console.log("cart not null");
+        let cartProductList = JSON.parse(cart);
+        console.log("cartProductList ");
+        console.log(cartProductList);
+        let cartToUpdate = cartProductList.find((cartProduct) => cartProduct.productId == productId && cartProduct.price == Math.round(price));
+        console.log("cartToUpdate ");
+        console.log(cartToUpdate);
+        if(cartToUpdate != null)
+        {
+          console.log("cart khac null");
+          var tempCartProductList = cartProductList.filter((product) => product.productId != productId);
+          console.log("tempCartProductList " + tempCartProductList);
+          cartToUpdate.quantity = Number.parseInt(cartToUpdate.quantity) + Number.parseInt(inputQuantity);
+          cartToUpdate.price = calculatePrice();
+          tempCartProductList = [...tempCartProductList, cartToUpdate];
+          localStorage.setItem("cart" , JSON.stringify(tempCartProductList));
+        }
+        else
+        {
+          var cartProduct = {
+              productId: id,
+              title: name,
+              price: calculatePrice(),
+              quantity: inputQuantity,   
+              discount: discount,
+              image: image
+          }
+          cartProductList = [...cartProductList, cartProduct];
+          localStorage.setItem("cart" , JSON.stringify(cartProductList));      
+        }
+      }
+      window.location.href = "/cart";
     }
-  }
-  window.location.href = "/cart";
+  }).catch((error) => {
+    setMessage(error.response.data.message);
+  })
 }
 
 function handleClick(action) 
@@ -120,6 +128,7 @@ function handleClick(action)
             </div>
             <div className='product_info_buy' onClick={() => {addCart(id,name,image,inputValue <= 0 ? 0 : inputValue,discount,price)}}><button>Buy Now</button></div>
         </div>
+        {message !== ''&& <p style={{color:'red'}}>{message}</p>}
         <AdvImage img={'/img/service_product_detail.png'} />
     </div>
   )

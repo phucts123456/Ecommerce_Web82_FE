@@ -14,6 +14,7 @@
 {
     margin-top: 140px;
     font-size: 20px;
+    color: var(--black-color);
 }
 
 .cart_item_img
@@ -50,7 +51,7 @@
 .coupon_and_subtotal_container
 {
     display: flex;
-    justify-content: space-between;
+    align-items: flex-end;
 }
 
 .coupon_container .coupon_use_btn

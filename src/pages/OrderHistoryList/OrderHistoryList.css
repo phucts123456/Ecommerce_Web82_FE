@@ -48,7 +48,7 @@
 .coupon_and_subtotal_container
 {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 .coupon_container .coupon_use_btn
