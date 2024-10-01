@@ -1,6 +1,6 @@
 import axiosClient from "../apis/axiosInstance";
 const orderEndpoint = "/orders"
-
+const historyEndpoint = "/history"
 const createOrder = (newOrder) => {
     return axiosClient.post(`${orderEndpoint}`, {
         status: newOrder.status,
@@ -10,10 +10,21 @@ const createOrder = (newOrder) => {
         city: newOrder.city,
         phoneNumber: newOrder.phoneNumber,
         email: newOrder.email,
-        items: newOrder.items
+        items: newOrder.items,
+        companyName: newOrder.companyName,
       })
 };
 
+const getOrderHistory = () => {
+    return axiosClient.get(`${orderEndpoint}${historyEndpoint}`);
+};
+
+const getHistoryDetail = (orderId) => {
+    return axiosClient.get(`${orderEndpoint}/${orderId}`)
+}
+
 export {
-    createOrder
+    createOrder,
+    getOrderHistory,
+    getHistoryDetail
 }

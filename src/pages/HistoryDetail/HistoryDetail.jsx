@@ -4,6 +4,7 @@ import { Container } from 'react-bootstrap'
 import './HistoryDetail.css'
 import { Button } from 'antd'
 import { useSearchParams } from 'react-router-dom';
+import { getHistoryDetail } from '../../apis/order'
 
 function HistoryDetail() {
     const [ cartData, setCartData] = useState([]);
@@ -11,7 +12,7 @@ function HistoryDetail() {
     const [ discountPrice, setDiscountPrice] = useState(0);
     const [ totalPrice, setTotalPrice] = useState(0);
     const [ currCoupon, setCurrCoupon ] = useState(null);
-    const [firstName, setFirstName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [ companyName, setCompanyName] = useState('');
     const [ streetAddress , setStreetAddress] = useState('');
     const [ city, setCity] = useState('');
@@ -21,45 +22,61 @@ function HistoryDetail() {
     let [searchParams, setSearchParams] = useSearchParams();
     const orderId = searchParams.get("orderId");
     useEffect(()=>{
-        const orders = localStorage.getItem("order") != null 
-            ? JSON.parse(localStorage.getItem("order")) 
-            : null;
-        let loginUser = localStorage.getItem("loginUser") != null 
-            ? JSON.parse(localStorage.getItem("loginUser")) 
-            : null;
-        let userId = '';
-        if(loginUser != null) userId = loginUser.userId;
-        console.log('userId')
-        console.log(userId)
-        if(orders != null && userId != null)
-        {
-            console.log("orders")
-            console.log(orders);
+        // const orders = localStorage.getItem("order") != null 
+        //     ? JSON.parse(localStorage.getItem("order")) 
+        //     : null;
+        // let loginUser = localStorage.getItem("loginUser") != null 
+        //     ? JSON.parse(localStorage.getItem("loginUser")) 
+        //     : null;
+        // let userId = '';
+        // if(loginUser != null) userId = loginUser.userId;
+        // console.log('userId')
+        // console.log(userId)
+        // if(orders != null && userId != null)
+        // {
+        //     console.log("orders")
+        //     console.log(orders);
 
-            let orderDetail = orders.find((order) => (order.orderId == orderId) && (order.user.userId == userId));
-            if(orderDetail == null) window.location.href = '/not_found';
-            console.log("orderDetail")
-            console.log(orderDetail)
-            if(orderDetail != null)
-            {
-                setCartData(orderDetail.cartData);
-                setDiscountPrice(orderDetail.discountPrice);
-                setSubtotal(orderDetail.subTotal);
-                setTotalPrice(orderDetail.totalPrice);
-                setFirstName(orderDetail.user.fullName);
-                setApartment(orderDetail.user.apartment);
-                setCity(orderDetail.user.city);
-                setCompanyName(orderDetail.user.companyName);
-                setEmail(orderDetail.user.email);
-                setPhoneNumber(orderDetail.user.phoneNumber);
-                setStreetAddress(orderDetail.user.streetAddress);
-            }
-        }
-        else
-        {
-            window.location.href = '/not_found';
-        }
-        
+        //     let orderDetail = orders.find((order) => (order.orderId == orderId) && (order.user.userId == userId));
+        //     if(orderDetail == null) window.location.href = '/not_found';
+        //     console.log("orderDetail")
+        //     console.log(orderDetail)
+        //     if(orderDetail != null)
+        //     {
+        //         setCartData(orderDetail.cartData);
+        //         setDiscountPrice(orderDetail.discountPrice);
+        //         setSubtotal(orderDetail.subTotal);
+        //         setTotalPrice(orderDetail.totalPrice);
+        //         setFirstName(orderDetail.user.fullName);
+        //         setApartment(orderDetail.user.apartment);
+        //         setCity(orderDetail.user.city);
+        //         setCompanyName(orderDetail.user.companyName);
+        //         setEmail(orderDetail.user.email);
+        //         setPhoneNumber(orderDetail.user.phoneNumber);
+        //         setStreetAddress(orderDetail.user.streetAddress);
+        //     }
+        // }
+        // else
+        // {
+        //     window.location.href = '/not_found';
+        // }
+        getHistoryDetail(orderId).then((response) =>{
+            console.log(response)
+            const order = response.data.data.order;
+            console.log(order)
+            setCartData(response.data.data.orderItems);
+            setSubtotal(order?.totalPrice);
+            setTotalPrice(order?.totalPrice);
+            setApartment(order.apartment);
+            setCity(order.city);
+            setCompanyName(order?.companyName);
+            setEmail(order.email);
+            setPhoneNumber(order.phoneNumber);
+            setStreetAddress(order.streetAddress);
+            setFullName(order.userId.fullName);
+        }).catch((error) => {
+            console.log(error)
+        })
     }, [])
 
 
@@ -68,14 +85,14 @@ function HistoryDetail() {
 
         <Container>
             <div className='product_detail_category'>
-                  {`Home > Cart > Checkout`}
+                  {`Home > OrderDetail > ${orderId}`}
             </div>
             <h2 className='check_out_title'>Billing Details</h2>
             <div className='check_out_info'>
                 <div className='check_out_user_info'>
                     <div className='check_out_user_info_input check_out_user_info_first_name'>
-                        <label htmlFor="firstName">FirstName</label>
-                        <input value={firstName} id='firstName' disabled={true}/>  
+                        <label htmlFor="firstName">Full name</label>
+                        <input value={fullName} id='firstName' disabled={true}/>  
                     </div> 
                     <div className='check_out_user_info_input check_out_user_info_company_name'>
                         <label htmlFor="companyName">Company Name</label>
@@ -122,8 +139,8 @@ function HistoryDetail() {
                                             <tr>
                                                 <th scope="row">
                                                     <a className='cart_item_link' href={`/product_detail?productId=${item.productId}&discount=${item.discount}`}>
-                                                        <img className='cart_item_img' src={item.image} />
-                                                        {item.title}
+                                                        <img className='cart_item_img' src={item.productId.image} />
+                                                        {item.productId.name}
                                                     </a>
                                                 </th>
                                                 <td>${Number.parseInt(item.price) * Number.parseInt(item.quantity)}</td>

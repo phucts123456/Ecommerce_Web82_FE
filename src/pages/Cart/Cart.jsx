@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap'
 import couponList from '../../data/coupon'
 import './Cart.css'
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { useDebounce } from 'use-debounce'
 function Cart() {
     const [ cartData, setCartData] = useState([]);
     const [ subTotal, setSubtotal] = useState(0);
@@ -15,8 +15,11 @@ function Cart() {
     const [ selectedCoupon, setSelectedCoupon ] = useState("");
     const [ currCoupon, setCurrCoupon ] = useState(null);
     const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
+    const [inputValue, setInputValue] = useState(0);
     const navigate = useNavigate();
-
+    const [value] = useDebounce(inputValue, 2000);
+    var typingTimer;                //timer identifier
+    var doneTypingInterval = 5000;  //time in ms, 5 seconds for example
     useEffect(()=>{
         if(!isLogin) navigate("/login");
         const cart = localStorage.getItem("cart");
@@ -101,6 +104,50 @@ function Cart() {
         }
     }
 
+    const handleCheck = () => {
+        // Clears running timer and starts a new one each time the user types
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          this.updateCartQuantity();
+        }, 1000);
+      }
+
+    function updateCartQuantity(inputQuantity, item) {
+        console.log(inputQuantity);
+        const cart = localStorage.getItem("cart");
+        console.log("cart not null");
+        let cartProductList = JSON.parse(cart);
+        console.log("cartProductList ");
+        console.log(cartProductList);
+        let cartToUpdate = cartProductList.find((cartProduct) => cartProduct.productId == item.productId && cartProduct.price == Math.round(item.price));
+        console.log("cartToUpdate ");
+        console.log(cartToUpdate);
+        if(cartToUpdate != null)
+        {
+            console.log("cart khac null");
+            var tempCartProductList = cartProductList.filter((product) => product.productId != item.productId);
+            console.log("tempCartProductList " + tempCartProductList);
+            cartToUpdate.quantity = Number.parseInt(inputQuantity);
+            cartToUpdate.price = Math.round(item.price,3);
+            tempCartProductList = [...tempCartProductList, cartToUpdate];
+            localStorage.setItem("cart" , JSON.stringify(tempCartProductList));
+        }
+        else
+        {
+            var cartProduct = {
+                productId: id,
+                title: name,
+                price: calculatePrice(),
+                quantity: inputQuantity,   
+                discount: discount,
+                image: image
+            }
+            cartProductList = [...cartProductList, cartProduct];
+            localStorage.setItem("cart" , JSON.stringify(cartProductList));      
+        }
+        window.location.href = "/cart";
+    }
+
     return (
         <div className='cart_container'>
             <Container>
@@ -134,7 +181,14 @@ function Cart() {
                                                 </a>
                                             </th>
                                             <td>{item.price}</td>
-                                            <td>{item.quantity}</td>
+                                            <td>
+                                                <input 
+                                                    onBlur={(e) =>{updateCartQuantity(e.target.value,item);}} 
+
+                                                    style={{width:'60px',height:"40px",borderRadius:'5px',textAlign:"center",border:"1px solid var(--black-color)",}} 
+                                                    type={'number'} 
+                                                    defaultValue={item.quantity} />
+                                            </td>
                                             <td>{Number.parseInt(item.price) * Number.parseInt(item.quantity)}</td>
                                             <td><button style={{backgroundColor:"var(--white-color)"}} onClick={() => {deleteSingle(item.productId,item.price)}}><img style={{width:'30px'}} src='/img/icons8-trash.svg'/></button></td>
                                         </tr>
@@ -150,24 +204,6 @@ function Cart() {
                     && cartData != '' 
                     ?   
                         <div className='coupon_and_subtotal_container'>
-                            {/* <div className='coupon_container'>
-                                <select className='coupon_ddl' onChange={(e) => setSelectedCoupon(e.target.value)}>
-                                    <Option value=""></Option>
-                                    {
-                                        couponList.map((coupon) =>{
-                                            return <Option value={coupon.couponId}>{coupon.couponId} - {coupon.discount}%</Option>
-                                        })
-                                    }
-                                   <option value=""></option>
-                                    {
-                                        couponList.map((coupon) =>{
-                                            return <option value={coupon.couponId}>{coupon.couponId} - {coupon.discount}%</option>
-                                        })
-                                    }
-                                </select>
-                                <button className='coupon_use_btn' onClick={ApplyCoupon}>Use Coupon</button>
-                                <div className='coupon_msg'>{currCoupon?.couponId != null ? `Coupon ${currCoupon?.couponId} is applied. You get ${currCoupon?.discount}% discount` : ""}</div>
-                            </div> */}
                             <div className='subtotal_container'>
                                 <h2 className='subtotal_title'>
                                     Cart total

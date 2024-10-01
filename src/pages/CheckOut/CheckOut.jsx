@@ -142,7 +142,7 @@ function CheckOut() {
             streetAddress:streetAddress,
             companyName:companyName,
             city:city,
-            status: constants.CONST_ORDER_STATUS_ORDERD,
+            status: constants.CONST_ORDER_STATUS_ORDERED,
             email:email,
             phoneNumber:phoneNumber,
             apartment:apartment,
@@ -151,14 +151,21 @@ function CheckOut() {
             orderDate: (new Date()).toDateString(),
         }
         createOrder(newOrder).then((response) => {
-            setIsSuccess(true)
+            console.log(response)
+            setIsSuccess(true);
+            localStorage.removeItem("cart");
+            setTimeout(() => {
+                setIsSuccess(false);
+                window.location.href = "/";
+            },2000);
         }).catch((error) => {
+            console.log(error)
             setIsSuccess(false);
-            if (error.status === 401) {
-                navigate("/login");
+            if (error.response.status === 401) {
+                localStorage.removeItem("accessToken");
                 localStorage.setItem("msg", "Login session is end. Please login again.")
+                navigate("/login");
             }
-            return
         })
         // if(isError == false)
         // {
