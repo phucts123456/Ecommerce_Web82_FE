@@ -21,7 +21,7 @@ function ProductList() {
     const productList = getProductList(pageNumber, searchKey, category, constants.CONST_PRODUCT_PER_PAGE).then((response) => {
       console.log("response.data.data.items");
       console.log(response.data.data.items);
-      setProducts(response.data.data.items);
+      setProducts(response.data.data.items.filter(p => p.isAvailable === true));
       setTotalPage(response.data.data.totalPage);
       setIsLoading(false);
     }).catch((error) => {
