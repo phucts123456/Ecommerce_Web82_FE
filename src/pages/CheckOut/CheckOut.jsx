@@ -6,7 +6,9 @@ import { Button } from 'antd'
 import { createOrder } from '../../apis/order';
 import constants from '../../data/constants'
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { getPaymentList } from '../../apis/payment'
+import { Input, Radio, Space } from 'antd';
+import PaymentFormContainer from '../../components/Payment/PaymentFormContainer'
 function CheckOut() {
     const [ cartData, setCartData] = useState([]);
     const [ subTotal, setSubtotal] = useState(0);
@@ -28,6 +30,7 @@ function CheckOut() {
     const [ errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [ errorEmail, setErrorEmail] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [paymentList, setPaymentList] = useState([]);
     const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
     const navigate = useNavigate();
 
@@ -52,6 +55,13 @@ function CheckOut() {
             {
                 calculateSubTotal(cartInfor);
             }
+
+            getPaymentList().then((response) => {{
+                console.log(response.data.data)
+                setPaymentList(response.data.data);
+            }}).catch((error) => {
+                console.log(error)
+            })
         }
     }, [])
     const calculateSubTotal = (cartInfor, coupon) => {
@@ -167,14 +177,6 @@ function CheckOut() {
                 navigate("/login");
             }
         })
-        // if(isError == false)
-        // {
-        //     setIsSuccess(true);
-        //     setTimeout(() => {
-        //         setIsSuccess(false);
-        //         window.location.href = "/";
-        //     },2000);
-        // }
     }
   return (
     <>
@@ -238,6 +240,9 @@ function CheckOut() {
                         </div>    
                     </div>
                     <div className="check_out_cart_info">
+                        <div className='check_out_btn_container'>
+                                <Button onClick={() => completeOrder()} className='check_out_btn' >Complete Order</Button>
+                        </div>
                         <div className='cart_list_container'>
                             <table className="table">
                                 <thead>
@@ -269,6 +274,22 @@ function CheckOut() {
                                 </tbody>
                             </table>
                         </div>
+                        <div className='cart_list_payment'>
+                            <h5>Select payment</h5>
+                            <Radio.Group 
+                            // onChange={onChange} 
+                            // value={value}
+                            >
+                                <Space direction="vertical">
+                                    {
+                                        paymentList.map((payment) => {
+                                            return  <Radio value={payment.paymentId}>{payment.paymentName}</Radio>
+                                        })
+                                    }
+                                </Space>
+                            </Radio.Group>
+                            <PaymentFormContainer/>
+                        </div>
                         <div className='subtotal_container'>
                             <h2 className='subtotal_title'>
                                 Cart total
@@ -289,9 +310,7 @@ function CheckOut() {
                                 <div className='total_price_title'>Total:</div>
                                 <div className='total_price_price'>${totalPrice}</div>
                             </div>
-                            <div className='check_out_btn_continer'>
-                                <Button onClick={() => completeOrder()} className='check_out_btn' >Complete Order</Button>
-                            </div>
+
                         </div>
                     </div>
                 </div>
