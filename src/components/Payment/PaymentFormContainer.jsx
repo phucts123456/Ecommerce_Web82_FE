@@ -1,25 +1,19 @@
-import PaymentFormStripe from "./Stripe/PaymentFormStripe"
-import {
-    Elements,
-  } from '@stripe/react-stripe-js';
-  import {loadStripe} from '@stripe/stripe-js';
-function PaymentFormContainer() {
-    const stripePromise = loadStripe('pk_test_51Q828URsYTtz9iNpjGU8JRUf72NQsjlQ8d1sRLeDu1k8tvtfSwlTigP3YZ49SpfSELU4XzxR2ZDuRSM07I4julBc00Nt3Rkbd4');
+import constants from '../../data/constants'
 
-    const options = {
-      mode: 'payment',
-      amount: 1099,
-      currency: 'usd',
-      // Fully customizable with appearance API.
-      appearance: {
-        /*...*/
-      },
-    };
-    return  <>
-        <Elements stripe={stripePromise} options={options}>
-            <PaymentFormStripe />
-        </Elements>
-    </>
+import PaymentFormStripe from "./Stripe/PaymentFormStripe"
+function PaymentFormContainer({paymentId}) {
+    const render = () => {
+      switch (paymentId) {
+        case constants.CONST_PAYMENT_TYPE_STRIPE_PAYMENT_ID:
+          return <PaymentFormStripe/>
+          break;
+      
+        default:
+          return ""
+          break;
+      }
+    }
+    return render();
 }
 
 export default PaymentFormContainer

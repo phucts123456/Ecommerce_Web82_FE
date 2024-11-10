@@ -31,6 +31,7 @@ function CheckOut() {
     const [ errorEmail, setErrorEmail] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
     const [paymentList, setPaymentList] = useState([]);
+    const [selectedPayment, setSelectedPayment] = useState(null);
     const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken") != null);
     const navigate = useNavigate();
 
@@ -178,6 +179,11 @@ function CheckOut() {
             }
         })
     }
+
+    const onPaymentChange = (e) => {
+        const paymentId = e.target.value;
+        setSelectedPayment(paymentId)
+    }
   return (
     <>
         {
@@ -277,8 +283,7 @@ function CheckOut() {
                         <div className='cart_list_payment'>
                             <h5>Select payment</h5>
                             <Radio.Group 
-                            // onChange={onChange} 
-                            // value={value}
+                                onChange={onPaymentChange}
                             >
                                 <Space direction="vertical">
                                     {
@@ -288,7 +293,7 @@ function CheckOut() {
                                     }
                                 </Space>
                             </Radio.Group>
-                            <PaymentFormContainer/>
+                            <PaymentFormContainer paymentId={selectedPayment}/>
                         </div>
                         <div className='subtotal_container'>
                             <h2 className='subtotal_title'>

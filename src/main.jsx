@@ -21,6 +21,7 @@ import HistoryDetail from './pages/HistoryDetail/HistoryDetail.jsx'
 import PrivateRoute from './context/PrivateRoute'
 import UserStore from './context/UserStore'
 import Layout from './Layout.jsx'
+import CompletePage from './components/Payment/Stripe/CompletePage.jsx'
 library.add(faMagnifyingGlass,faCartShopping,faCircleUser);
 ReactDOM.createRoot(document.getElementById('root')).render(
 
@@ -36,9 +37,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path='/product_detail' Component={ProductDetail} />
             <Route path='/product_list' Component={ProductList} />
             <Route path='/cart' Component={Cart} />
-            <Route path='/check_out' Component={CheckOut} />
+            <Route path='/check_out/*' Component={CheckOut} />
             <Route path='/order_history_list' Component={OrderHistoryList} />
             <Route path='/order_history_detail' Component={HistoryDetail} />
+            <Route path="/complete" element={<CompletePage />} />
           </Route>  
         </Route>
       </Route>
