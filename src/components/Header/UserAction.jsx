@@ -1,6 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useContext } from 'react';
@@ -18,11 +19,11 @@ function UserAction() {
   return (
     <div className='user_action_container'>
       <Button style={{backgroundColor:'white',border:'none'}}>
-        <a className='icon_link' href='/cart'><FontAwesomeIcon className='user_action_item user_action_cart' icon="fa-solid fa-cart-shopping" /></a>
+        <Link to='/login'><FontAwesomeIcon className='user_action_item user_action_cart' icon="fa-solid fa-cart-shopping" /></Link>
       </Button>
       <div class="dropdown">
         <button style={{backgroundColor:'white',border:'none'}} class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          <a className='icon_link' href='/login'><FontAwesomeIcon className='user_action_item user_action_user' icon="fa-regular fa-circle-user" /></a>
+          <Link to='/login'><FontAwesomeIcon className='user_action_item user_action_user' icon="fa-regular fa-circle-user" /></Link>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
           {
