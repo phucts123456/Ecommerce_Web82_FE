@@ -22,3 +22,7 @@
 {
     width: 45%;
 }
+
+.ant-card-body {
+    padding: 5px !important;
+}

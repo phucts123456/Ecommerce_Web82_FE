@@ -2,10 +2,10 @@ import React from 'react'
 import './ProductDetail.css'
 import ProductInfor from './ProductInfor'
 import ProductImage from './ProductImage'
-function ProductSingle({name,rating,price,description,image,id,category,discount}) {
+function ProductSingle({name,rating,price,description,image,id,category,discount,variations,selectedVariation,imageList}) {
   return (
     <div className='product_detail_container'>
-        <ProductImage img={image} />
+        <ProductImage images={imageList} />
         <ProductInfor 
           discount={discount}
           name={name}
@@ -16,6 +16,8 @@ function ProductSingle({name,rating,price,description,image,id,category,discount
           key={id}
           category={category}
           image={image}
+          variationList={variations}
+          selectedVariation={selectedVariation}
         />
    </div>
   )

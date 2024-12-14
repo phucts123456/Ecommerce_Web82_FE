@@ -1,14 +1,20 @@
-import { Button } from 'bootstrap';
 import React from 'react'
 import { useState, useRef } from 'react';
 import AdvImage from '../../HomePage/AdvImage/AdvImage';
-import {checkProductStock} from '../../../apis/product'
-function ProductInfor({name,rating,price,description,image,id,category,discount}) {
+import {checkProductStock} from '../../../apis/product';
+import { Card, Col, Row } from 'antd';
+const { Meta } = Card;
+import { Link } from 'react-router-dom';
+function ProductInfor({name,rating,price,description,image,id,category,discount, variationList, selectedVariation}) {
   const [inputValue, setInputValue] = useState(1);
   const [message, setMessage] = useState("");
+  const [color, setColor] = useState([]);
   const maxRating = 5;
   const calculatePrice = () => {
-    return discount > 0 ? Math.round(price - ((price * discount) / 100),3) : Math.round(price,3);
+    const productPrice = selectedVariation ? selectedVariation.price : price;
+    console.log("productPrice")
+    console.log(selectedVariation)
+    return discount > 0 ? Math.round(productPrice - ((productPrice * discount) / 100),3) : Math.round(productPrice,3);
   }
   const getRatting = () => {
     let a = [];
@@ -17,16 +23,15 @@ function ProductInfor({name,rating,price,description,image,id,category,discount}
             ? <img className='product_item_rating_star_image' src='/img/golden_star.svg'></img> 
             : <img className='product_item_rating_star_image' src='/img/grey_star.svg'></img>);
     }
-
     return a;
-
 }
 function isDecimal(num) {
   return (num ^ 0) !== num;
 }
-function addCart(productId, name, image, inputQuantity,discount,price)
+function addCart(productId, name, image, inputQuantity,discount,price, vId)
 {
-  setMessage("")
+  setMessage("");
+
   let isLoggedIn = localStorage.getItem("accessToken") != null;
   
   if(!isLoggedIn) 
@@ -48,6 +53,7 @@ function addCart(productId, name, image, inputQuantity,discount,price)
         localStorage.removeItem("applyCoupon");
         var cartProduct = {
           productId: id,
+          variationId: vId,
           title: name,
           price: calculatePrice(),
           quantity: inputQuantity,
@@ -113,7 +119,29 @@ function handleClick(action)
 }
   return (
     <div className='product_info_container'>
-        <h2 className='product_info_name'>{name}</h2>
+        <h2 className='product_info_name'>{name}{selectedVariation && ` - ${selectedVariation.name}`}</h2>
+        <Row gutter={0}>
+          {
+            variationList 
+              && variationList.map((variation) => {
+                return (
+                  <Col span={8}>
+                    <a style={{textDecoration:'none'}} href={`/product_detail?productId=${id}&variationId=${variation._id}`}>
+                    <Card
+                      hoverable                       
+                      style={{ width: 150, display: 'flex' }}
+                    >
+                          <div style={{display: 'flex'}}>
+                            <img style={{ width: "50%" }} alt="example" src={variation.image} />
+                            <Meta style={{ width: "50%" }} title={`${variation.name}`} description={`$${variation.price}`} />
+                          </div>
+                        </Card>
+                    </a>
+                  </Col>
+                )                                   
+              })
+          }
+        </Row>
         <div className='product_info_ratting'>
             <div className="product_item_rating_star">{getRatting()}</div>
             <div className="product_item_rating_count">({rating.count} reviews)</div>
@@ -126,7 +154,7 @@ function handleClick(action)
               <input onChange={(e) => setInputValue(e.target.value)} value={inputValue} className="product_info_quantity_input" type={'number'} />
               <button onClick={() =>{handleClick("add")}}  className='product_info_quantity_btn product_info_quantity_add_btn'>+</button>
             </div>
-            <div className='product_info_buy' onClick={() => {addCart(id,name,image,inputValue <= 0 ? 0 : inputValue,discount,price)}}><button>Buy Now</button></div>
+            <div className='product_info_buy' onClick={() => {addCart(id,selectedVariation ? `${name} - ${selectedVariation.name}` : name,selectedVariation ? selectedVariation.image : image,inputValue <= 0 ? 0 : inputValue,discount,price, selectedVariation ? selectedVariation._id : id)}}><button>Buy Now</button></div>
         </div>
         {message !== ''&& <p style={{color:'red'}}>{message}</p>}
         <AdvImage img={'/img/service_product_detail.png'} />

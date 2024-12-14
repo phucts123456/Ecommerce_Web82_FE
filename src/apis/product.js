@@ -1,5 +1,6 @@
 import axiosClient from "../apis/axiosInstance";
 import constants from "../data/constants"
+const variationEndpoint = "/get-variation"
 function getProductList(pageNumber, searchKey, category, limit)
 {
     return axiosClient.get('/products', 
@@ -40,4 +41,9 @@ function checkProductStock(pid, quantityAdCart)
   })
 }
 
-export {getProductList, getProductById, checkProductStock}
+function getProductVariation(productId)
+{
+    return axiosClient.get(`/products${variationEndpoint}/${productId}`);
+}
+
+export {getProductList, getProductById, checkProductStock,getProductVariation}

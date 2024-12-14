@@ -1,10 +1,16 @@
 import React from 'react'
+import { ImagesProvider, ProductImages } from "react-product-image";
 
-function ProductImage({img}) {
+function ProductImage({images}) {
+
   return (
-    <div className='product_image_cotainer'>
-        <img className='product_image' src={img} />
-    </div>
+    <ImagesProvider
+      thumbUrls={images}
+      imageUrls={images}>
+      <div className='product_image_cotainer'>
+          <ProductImages />
+      </div>
+    </ImagesProvider>
   )
 }
 
