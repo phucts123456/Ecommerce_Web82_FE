@@ -1,17 +1,9 @@
 import axiosClient from "../apis/axiosInstance";
 const orderEndpoint = "/orders"
 const historyEndpoint = "/history"
-const createOrder = (newOrder) => {
+const createOrder = (data) => {
     return axiosClient.post(`${orderEndpoint}`, {
-        status: newOrder.status,
-        totalPrice: newOrder.totalPrice,
-        streetAddress: newOrder.streetAddress,
-        apartment: newOrder.apartment,
-        city: newOrder.city,
-        phoneNumber: newOrder.phoneNumber,
-        email: newOrder.email,
-        items: newOrder.items,
-        companyName: newOrder.companyName,
+        orders: data
       })
 };
 

@@ -9,8 +9,9 @@ import { getHistoryDetail } from '../../apis/order'
 function HistoryDetail() {
     const [ cartData, setCartData] = useState([]);
     const [ subTotal, setSubtotal] = useState(0);
-    const [ discountPrice, setDiscountPrice] = useState(0);
     const [ totalPrice, setTotalPrice] = useState(0);
+    const [ discountPrice, setDiscountPrice] = useState(0);
+    const [ shippingFee, setshippingFee] = useState(0);
     const [ currCoupon, setCurrCoupon ] = useState(null);
     const [fullName, setFullName] = useState('');
     const [ companyName, setCompanyName] = useState('');
@@ -68,6 +69,7 @@ function HistoryDetail() {
             setSubtotal(order?.totalPrice);
             setTotalPrice(order?.totalPrice);
             setApartment(order.apartment);
+            setshippingFee(order.shippingFee)
             setCity(order.city);
             setCompanyName(order?.companyName);
             setEmail(order.email);
@@ -93,11 +95,7 @@ function HistoryDetail() {
                     <div className='check_out_user_info_input check_out_user_info_first_name'>
                         <label htmlFor="firstName">Full name</label>
                         <input value={fullName} id='firstName' disabled={true}/>  
-                    </div> 
-                    <div className='check_out_user_info_input check_out_user_info_company_name'>
-                        <label htmlFor="companyName">Company Name</label>
-                        <input value={companyName} id='companyName' disabled={true} />
-                    </div>         
+                    </div>        
                     <div className='check_out_user_info_input check_out_user_info_street_address'>                     
                         <label htmlFor="streetAddress">Street Address</label>
                         <input value={streetAddress} id='streetAddress'disabled={true} />
@@ -105,11 +103,7 @@ function HistoryDetail() {
                     <div className='check_out_user_info_input check_out_user_info_apartment'>
                         <label htmlFor="apartment">Apartment, floor, etc (optional)</label>
                         <input value={apartment} id='apartment' disabled={true} />
-                    </div>  
-                    <div className='check_out_user_info_input check_out_user_info_city'>
-                        <label htmlFor="city">City</label>
-                        <input value={city} id='city' disabled={true} />
-                    </div>  
+                    </div> 
                     <div className='check_out_user_info_input check_out_user_info_phone_number'>
                         <label htmlFor="phoneNumber">PhoneNumber</label>
                         <input value={phoneNumber} id='phoneNumber' disabled={true} />
@@ -138,9 +132,9 @@ function HistoryDetail() {
                                         <>
                                             <tr>
                                                 <th scope="row">
-                                                    <a className='cart_item_link' href={`/product_detail?productId=${item.productId}&discount=${item.discount}`}>
-                                                        <img className='cart_item_img' src={item.productId.image} />
-                                                        {item.productId.name}
+                                                    <a className='cart_item_link' href={`/product_detail?productId=${item.productId._id}&variationId=${item.variationId._id}`}>
+                                                        <img className='cart_item_img' src={item.variationId.image ?? item.productId.image} />
+                                                        {item.productId.name} - {item.variationId.name}
                                                     </a>
                                                 </th>
                                                 <td>${Number.parseInt(item.price) * Number.parseInt(item.quantity)}</td>
@@ -165,7 +159,7 @@ function HistoryDetail() {
                         </div>
                         <div className='cart_total subtotal_shipping_fee_container'>
                             <div className='subtotal_shipping_fee_title'>Shipping:</div>
-                            <div className='subtotal_shipping_fee_price'>Free</div>
+                            <div className='subtotal_shipping_fee_price'>{shippingFee}</div>
                         </div>
                         <div className='cart_total total_price_container'>
                             <div className='total_price_title'>Total:</div>

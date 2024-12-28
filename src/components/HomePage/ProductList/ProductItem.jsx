@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { toVndString } from '../../../utils/currencyUtil';
 
 function ProductItem({title, price, description, category, image, rating, discount, id }) {
     const maxRating = 5;
@@ -38,7 +39,7 @@ function ProductItem({title, price, description, category, image, rating, discou
                 {title}
             </div>
             <div className="product_item_price">
-                <p className='product_item_price_after_dicount'>${calculatePrice()}</p>
+                <p className='product_item_price_after_dicount'>{toVndString(calculatePrice())}</p>
                 <p className='product_item_price_before_dicount'>{discount > 0 ? `$${price}` : ''}</p>
             </div>
             <div className="product_item_rating">

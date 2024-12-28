@@ -42,7 +42,7 @@
     margin-top: 20px;
 }
 
-.check_out_user_info_input input
+.check_out_user_info_input input,select
 {
     background-color: var(--grey-color);
     height: 60px;

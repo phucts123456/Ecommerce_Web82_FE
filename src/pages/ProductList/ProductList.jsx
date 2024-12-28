@@ -14,11 +14,12 @@ function ProductList() {
   const searchKey = searchParams.get("sk") != null ? searchParams.get("sk")  : "";
   const pageNumber = searchParams.get("pn") != null ? searchParams.get("pn")  : 1;
   const category = searchParams.get("c") != null ? searchParams.get("c")  : "";
+  const shopId = searchParams.get("sid") != null ? searchParams.get("sid")  : "";
   const [isLoading, setIsLoading] = useState(false);
   const userContext = useContext(UserContext);
   useEffect(() => {
     setIsLoading(true);
-    const productList = getProductList(pageNumber, searchKey, category, constants.CONST_PRODUCT_PER_PAGE).then((response) => {
+    getProductList(pageNumber, searchKey, category, constants.CONST_PRODUCT_PER_PAGE,shopId).then((response) => {
       console.log("response.data.data.items");
       console.log(response.data.data.items);
       setProducts(response.data.data.items.filter(p => p.isAvailable === true));

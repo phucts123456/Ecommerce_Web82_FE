@@ -5,7 +5,9 @@ import {checkProductStock} from '../../../apis/product';
 import { Card, Col, Row } from 'antd';
 const { Meta } = Card;
 import { Link } from 'react-router-dom';
-function ProductInfor({name,rating,price,description,image,id,category,discount, variationList, selectedVariation}) {
+import { toVndString } from '../../../utils/currencyUtil';
+import ProductShop from '../Shop/ProductShop';
+function ProductInfor({name,rating,price,description,image,id,category,discount, variationList, selectedVariation,shopId,shopName,shopAddress}) {
   const [inputValue, setInputValue] = useState(1);
   const [message, setMessage] = useState("");
   const [color, setColor] = useState([]);
@@ -58,7 +60,10 @@ function addCart(productId, name, image, inputQuantity,discount,price, vId)
           price: calculatePrice(),
           quantity: inputQuantity,
           discount: discount,
-          image: image
+          image: image,
+          shopId: shopId,
+          shopName: shopName,
+          address: shopAddress
         }
         let cartProductList = [];
         cartProductList.push(cartProduct);
@@ -72,13 +77,14 @@ function addCart(productId, name, image, inputQuantity,discount,price, vId)
         let cartProductList = JSON.parse(cart);
         console.log("cartProductList ");
         console.log(cartProductList);
-        let cartToUpdate = cartProductList.find((cartProduct) => cartProduct.productId == productId && cartProduct.price == Math.round(price));
+        let cartToUpdate = cartProductList.find((cartProduct) => cartProduct.productId == productId 
+          && cartProduct.variationId == vId);
         console.log("cartToUpdate ");
         console.log(cartToUpdate);
         if(cartToUpdate != null)
         {
           console.log("cart khac null");
-          var tempCartProductList = cartProductList.filter((product) => product.productId != productId);
+          var tempCartProductList = cartProductList.filter((product) => product.variationId != vId);
           console.log("tempCartProductList " + tempCartProductList);
           cartToUpdate.quantity = Number.parseInt(cartToUpdate.quantity) + Number.parseInt(inputQuantity);
           cartToUpdate.price = calculatePrice();
@@ -89,11 +95,15 @@ function addCart(productId, name, image, inputQuantity,discount,price, vId)
         {
           var cartProduct = {
               productId: id,
+              variationId: vId,
               title: name,
               price: calculatePrice(),
               quantity: inputQuantity,   
               discount: discount,
-              image: image
+              image: image,
+              shopId: shopId,
+              shopName: shopName,
+              address: shopAddress
           }
           cartProductList = [...cartProductList, cartProduct];
           localStorage.setItem("cart" , JSON.stringify(cartProductList));      
@@ -102,7 +112,7 @@ function addCart(productId, name, image, inputQuantity,discount,price, vId)
       window.location.href = "/cart";
     }
   }).catch((error) => {
-    setMessage(error.response.data.message);
+    console.log(error)
   })
 }
 
@@ -129,11 +139,11 @@ function handleClick(action)
                     <a style={{textDecoration:'none'}} href={`/product_detail?productId=${id}&variationId=${variation._id}`}>
                     <Card
                       hoverable                       
-                      style={{ width: 150, display: 'flex' }}
+                      style={{ display: 'flex' }}
                     >
-                          <div style={{display: 'flex'}}>
-                            <img style={{ width: "50%" }} alt="example" src={variation.image} />
-                            <Meta style={{ width: "50%" }} title={`${variation.name}`} description={`$${variation.price}`} />
+                          <div style={{display: 'flex', flexDirection:'column',width:"100%"}}>
+                            <img style={{ width: "100px", height:"100px" }} alt="example" src={variation.image} />
+                            <Meta style={{ width: "100%" }} title={`${variation.name}`} description={`${toVndString(variation.price)}`} />
                           </div>
                         </Card>
                     </a>
@@ -146,7 +156,7 @@ function handleClick(action)
             <div className="product_item_rating_star">{getRatting()}</div>
             <div className="product_item_rating_count">({rating.count} reviews)</div>
         </div>
-        <div className='product_info_price'>${calculatePrice()}</div>
+        <div className='product_info_price'>{toVndString(calculatePrice())}</div>
         <div className='product_info_desc'>{description}</div>
         <div className='product_info_quantity_and_buy'>
             <div className='product_info_quantity'>

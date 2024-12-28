@@ -4,6 +4,7 @@ import ProductSingle from '../../components/ProductDetail/ProductSingle/ProductS
 import './ProductDetail.css'
 import { useSearchParams } from 'react-router-dom';
 import { getProductById, getProductVariation } from '../../apis/product';
+import ProductShop from '../../components/ProductDetail/Shop/ProductShop';
 function ProductDetail() {
   const [product, setProduct] = useState('');
   let [searchParams, setSearchParams] = useSearchParams();
@@ -14,14 +15,15 @@ function ProductDetail() {
   const [productVariation, setProductVariation] = useState('');
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [imageList, setImageList] = useState([]);
-  useEffect(async () => {
-    await getProductData();
-    await getVariationData();
+  useEffect( () => {
+    getProductData();
+    getVariationData();
   }, [])
 
   const getProductData = async () =>{
     let response =  await getProductById(productId);
     if (response.status === 200) {
+      console.log(response.data.data)
       setProduct(response.data.data);
     } else {
       console.log(response);
@@ -80,7 +82,10 @@ function ProductDetail() {
                   image={product?.image !== undefined ? product?.image : ""}
                   variations={productVariation ?? []}
                   selectedVariation={selectedVariation}
-                  imageList={imageList} />
+                  imageList={imageList}
+                  shopId={product?.shopId._id !== undefined ? product?.shopId._id  : ""}  
+                  shopName={product?.shopId.name !== undefined ?product?.shopId.name : ""}
+                  shopAddress={product?.shopId.address !== undefined ?product?.shopId.address : ""}  />
               </> 
             :
               <>
@@ -92,6 +97,13 @@ function ProductDetail() {
                 </div>
               </>
           }
+          <ProductShop 
+            shopId={product?.shopId?._id !== undefined 
+              ? product?.shopId._id  
+              : ""}   
+            shopName={product?.shopId?.name !== undefined ? product?.shopId.name  : ""}
+            shopAddress={product?.shopId?.address !== undefined ? product?.shopId.address  : ""} 
+            />
         </Container>
     </div>
   )

@@ -1,7 +1,7 @@
 import axiosClient from "../apis/axiosInstance";
 import constants from "../data/constants"
 const variationEndpoint = "/get-variation"
-function getProductList(pageNumber, searchKey, category, limit)
+function getProductList(pageNumber, searchKey, category, limit, shopId)
 {
     return axiosClient.get('/products', 
     {
@@ -9,7 +9,8 @@ function getProductList(pageNumber, searchKey, category, limit)
           pn:pageNumber,
           sk:searchKey,
           category:category,
-          limit: limit
+          limit: limit,
+          sid:shopId,
         }
     })
 }
